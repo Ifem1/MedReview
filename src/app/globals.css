@@ -1,0 +1,95 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+@import "tailwindcss";
+
+:root {
+  /* ── Brand palette anchored to #c6ccf7 ── */
+  --color-bg:             #D8DCFF;
+  --color-surface:        #FFFFFF;
+  --color-surface-soft:   #ECEEFF;
+  --color-surface-mid:    #E2E5FB;
+
+  /* Ink */
+  --color-ink:            #1E1B4B;
+  --color-ink-secondary:  #4338CA;
+  --color-ink-muted:      #6366F1;
+  --color-ink-light:      #A5B4FC;
+
+  /* Brand accent */
+  --color-accent:         #c6ccf7;
+  --color-accent-dark:    #4F46E5;
+  --color-accent-deeper:  #3730A3;
+  --color-accent-glow:    rgba(198, 204, 247, 0.35);
+
+  /* Semantic urgency */
+  --color-urgency-green:  #16A34A;
+  --color-routine-blue:   #0284C7;
+  --color-soon-amber:     #D97706;
+  --color-urgent-orange:  #EA580C;
+  --color-emergency-red:  #DC2626;
+
+  /* UI chrome */
+  --color-border:         #DDE1F9;
+  --color-border-soft:    #ECEEFF;
+  --shadow-card:          0 1px 3px rgba(79,70,229,0.08), 0 4px 16px rgba(79,70,229,0.06);
+  --shadow-card-hover:    0 4px 12px rgba(79,70,229,0.14), 0 8px 32px rgba(79,70,229,0.08);
+
+  /* Proof panel */
+  --color-proof-bg:       #F0F1FF;
+  --color-proof-text:     #312E81;
+
+  /* Fonts */
+  --font-heading: "Sora", sans-serif;
+  --font-body:    "Inter", sans-serif;
+  --font-mono:    "IBM Plex Mono", monospace;
+
+  /* ── Legacy aliases (map old var names to new palette) ── */
+  --color-teal:         var(--color-accent-dark);
+  --color-mint:         var(--color-surface-soft);
+  --color-panel-shadow: rgba(79,70,229,0.08);
+  --color-proof-slate:  var(--color-ink-secondary);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--color-surface-soft); }
+::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 10px; }
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn { animation: fadeUp 0.35s ease forwards; }
+
+@keyframes pulse-emergency {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+  50%       { opacity: 0.9; box-shadow: 0 0 0 6px rgba(220,38,38,0.15); }
+}
+.animate-pulse-emergency { animation: pulse-emergency 2s ease-in-out infinite; }
+
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent-dark);
+  outline-offset: 2px;
+  border-radius: 6px;
+}

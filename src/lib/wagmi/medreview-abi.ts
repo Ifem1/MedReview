@@ -1,0 +1,142 @@
+export const MEDREVIEW_ABI = [
+  // ── Write functions ──
+  {
+    type: "function",
+    name: "create_review_session",
+    inputs: [
+      { name: "review_id",   type: "string" },
+      { name: "review_json", type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "submit_symptom_review",
+    inputs: [
+      { name: "review_id",    type: "string" },
+      { name: "symptom_json", type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "submit_report_review",
+    inputs: [
+      { name: "review_id",   type: "string" },
+      { name: "report_json", type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "submit_follow_up",
+    inputs: [
+      { name: "review_id",    type: "string" },
+      { name: "followup_id",  type: "string" },
+      { name: "followup_json",type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "archive_review",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "flag_emergency_review",
+    inputs: [
+      { name: "review_id", type: "string" },
+      { name: "reason",    type: "string" },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  // ── View functions ──
+  {
+    type: "function",
+    name: "get_review",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_triage_result",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_user_reviews",
+    inputs: [{ name: "address", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_total_reviews",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_review_followup_ids",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [{ name: "", type: "string[]" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_followup_result",
+    inputs: [
+      { name: "review_id",   type: "string" },
+      { name: "followup_id", type: "string" },
+    ],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_total_followups",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_followup",
+    inputs: [{ name: "followup_id", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_review_followups",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_safety_flags",
+    inputs: [{ name: "review_id", type: "string" }],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "get_protocol_state",
+    inputs: [],
+    outputs: [{ name: "", type: "string" }],
+    stateMutability: "view",
+  },
+] as const;
