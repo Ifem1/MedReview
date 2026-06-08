@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ClinicalHeader from "@/components/layout/ClinicalHeader";
 import ConsentGate from "@/components/layout/ConsentGate";
-import { ArrowRight, Brain, Shield, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowRight, Brain, Shield, ChevronRight } from "lucide-react";
 
 const reviewTypes = [
   { emoji: "🩺", title: "Symptom Review",       desc: "Describe symptoms for structured urgency triage",         href: "/review/symptoms" },
@@ -42,14 +42,6 @@ export default function HomePage() {
           />
 
           <div className="relative max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-24 text-center">
-            <div
-              className="inline-flex items-center gap-2 text-xs font-bold px-3.5 py-1.5 rounded-full mb-6"
-              style={{ backgroundColor: "var(--color-accent)", color: "var(--color-accent-deeper)" }}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              Powered by GenLayer Intelligent Contracts
-            </div>
-
             <h1
               className="text-4xl sm:text-5xl md:text-[64px] font-extrabold leading-none tracking-tight mb-6 max-w-4xl mx-auto"
               style={{ fontFamily: "var(--font-heading)", color: "var(--color-ink)" }}
@@ -68,8 +60,8 @@ export default function HomePage() {
               className="text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10"
               style={{ color: "var(--color-ink-secondary)" }}
             >
-              Submit symptoms or a report summary and receive structured triage guidance —
-              urgency levels, red-flag checks, and next-step recommendations.
+              Submit symptoms or a report summary and receive structured triage guidance:
+              urgency levels, red flag checks, and next step recommendations.
               Built for triage, <em>not diagnosis.</em>
             </p>
 
