@@ -61,7 +61,7 @@ function normalise(reviewId: string, r: Record<string, unknown>): TriageResult {
   };
 }
 
-export function useTriageResult(reviewId: string | undefined) {
+export function useTriageResult(reviewId: string | undefined | null) {
   const [result, setResult]   = useState<TriageResult | null>(null);
   const [proof, setProof]     = useState<Partial<GenLayerProof>>({});
   const [loading, setLoading] = useState(true);
@@ -72,6 +72,7 @@ export function useTriageResult(reviewId: string | undefined) {
 
   useEffect(() => {
     if (!reviewId) return;
+    const safeReviewId: string = reviewId;
     stopped.current = false;
     pollCount.current = 0;
 
@@ -82,7 +83,7 @@ export function useTriageResult(reviewId: string | undefined) {
 
       // 1. Try Supabase first (fastest if sync-review already saved it)
       try {
-        const res = await fetch(`/api/triage/${reviewId}`);
+        const res = await fetch(`/api/triage/${safeReviewId}`);
         const ct = res.headers.get("content-type") || "";
         if (ct.includes("application/json")) {
           const data = await res.json();
@@ -105,11 +106,11 @@ export function useTriageResult(reviewId: string | undefined) {
           const raw = await client.readContract({
             address: CONTRACT,
             functionName: "get_triage_result",
-            args: [reviewId],
+            args: [safeReviewId],
           });
           const parsed = parseResult(raw);
           if (parsed) {
-            const triage = normalise(reviewId, parsed);
+            const triage = normalise(safeReviewId, parsed);
             setResult(triage);
             setProof({
               contractAddress: CONTRACT,
@@ -117,7 +118,7 @@ export function useTriageResult(reviewId: string | undefined) {
               txHash: "",
               status: "confirmed",
               timestamp: new Date().toISOString(),
-              reviewId,
+              reviewId: safeReviewId,
             });
             setLoading(false);
 
@@ -125,7 +126,7 @@ export function useTriageResult(reviewId: string | undefined) {
             fetch("/api/genlayer/save-result", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ reviewId, triageResult: parsed }),
+              body: JSON.stringify({ reviewId: safeReviewId, triageResult: parsed }),
             }).catch(() => {});
             return;
           }
