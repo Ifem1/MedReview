@@ -1,65 +1,116 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import ClinicalHeader from "@/components/layout/ClinicalHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import ConsentGate from "@/components/layout/ConsentGate";
 import {
   ArrowRight, Brain, Shield, ShieldCheck, FileText,
-  Stethoscope, Pill, Baby, HeartPulse, RefreshCw,
-  Lock, Activity, Zap, CheckCircle,
+  Stethoscope, HeartPulse,
+  Lock, Activity, Zap, CheckCircle, Pill, Baby, RefreshCw,
 } from "lucide-react";
 
+const mockRows = [
+  { label:"Chest pain, shortness of breath", badge:"HIGH RISK", bc:"#EF4444" },
+  { label:"Medication interaction check",    badge:"MEDIUM",    bc:"#F59E0B" },
+  { label:"Post-op follow-up review",        badge:"ROUTINE",   bc:"#34D399" },
+];
+
+const mockStats = [
+  { label:"Reviews",  value:24,  color:"#818CF8" },
+  { label:"High Risk",value:3,   color:"#EF4444" },
+  { label:"Completed",value:21,  color:"#34D399" },
+];
+
+function AnimatedStat({ target, color }: { target: number; color: string }) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let frame = 0;
+    const total = 40;
+    const timer = setInterval(() => {
+      frame++;
+      setCount(Math.round((target * frame) / total));
+      if (frame >= total) clearInterval(timer);
+    }, 30);
+    return () => clearInterval(timer);
+  }, [target]);
+  return <p className="text-xl font-bold" style={{ color, fontFamily:"var(--font-heading)" }}>{count}</p>;
+}
+
 function TriageMockup() {
+  const [visibleRows, setVisibleRows] = useState<number[]>([]);
+
+  useEffect(() => {
+    mockRows.forEach((_, i) => {
+      setTimeout(() => setVisibleRows(prev => [...prev, i]), 600 + i * 350);
+    });
+  }, []);
+
   return (
-    <div className="relative w-full max-w-[420px] mx-auto">
-      <div className="rounded-3xl overflow-hidden shadow-2xl" style={{ background: "linear-gradient(135deg, #1E1B4B, #0F0D2A)", border: "2px solid #312E81" }}>
+    <div className="relative w-full max-w-[480px] mx-auto">
+      {/* Outer glow ring */}
+      <div className="absolute -inset-8 -z-10 rounded-[40px] opacity-30 blur-3xl pointer-events-none"
+        style={{ background:"radial-gradient(ellipse, #4F46E5 0%, transparent 70%)" }} />
+
+      <div className="rounded-3xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.45)]"
+        style={{ background:"linear-gradient(160deg, #1E1B4B 0%, #0A091C 100%)", border:"1.5px solid rgba(99,102,241,0.4)" }}>
+
         {/* Header bar */}
-        <div className="px-5 py-3.5 flex items-center justify-between" style={{ backgroundColor: "#1E1B4B", borderBottom: "1px solid #312E81" }}>
+        <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor:"rgba(30,27,75,0.9)", borderBottom:"1px solid rgba(99,102,241,0.2)" }}>
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, #4F46E5, #818CF8)" }}>
-              <Activity className="w-3 h-3 text-white" />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background:"linear-gradient(135deg, #4F46E5, #818CF8)" }}>
+              <Activity className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-white text-xs font-bold tracking-wide">MedReview</span>
+            <span className="text-white text-sm font-bold tracking-wide">MedReview</span>
           </div>
-          <div className="flex gap-1.5">
+          <div className="flex gap-2">
             {["#EF4444","#F59E0B","#22C55E"].map(c => (
-              <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: c }} />
+              <div key={c} className="w-3 h-3 rounded-full" style={{ backgroundColor:c }} />
             ))}
           </div>
         </div>
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-2.5 p-4" style={{ backgroundColor: "#0F0D2A" }}>
-          {[{ label:"Reviews",value:"24",color:"#818CF8" },{ label:"High Risk",value:"3",color:"#EF4444" },{ label:"Completed",value:"21",color:"#34D399" }].map(s => (
-            <div key={s.label} className="rounded-xl p-3 text-center" style={{ backgroundColor:"rgba(79,70,229,0.12)", border:"1px solid rgba(79,70,229,0.25)" }}>
-              <p className="text-[10px] mb-1" style={{ color:"#64748B" }}>{s.label}</p>
-              <p className="text-xl font-bold" style={{ color:s.color, fontFamily:"var(--font-heading)" }}>{s.value}</p>
+
+        {/* Animated stats */}
+        <div className="grid grid-cols-3 gap-3 p-5" style={{ backgroundColor:"rgba(10,9,28,0.8)" }}>
+          {mockStats.map(s => (
+            <div key={s.label} className="rounded-2xl p-3.5 text-center" style={{ backgroundColor:"rgba(79,70,229,0.12)", border:"1px solid rgba(79,70,229,0.25)" }}>
+              <p className="text-[10px] mb-1.5" style={{ color:"#64748B" }}>{s.label}</p>
+              <AnimatedStat target={s.value} color={s.color} />
             </div>
           ))}
         </div>
-        {/* Review rows */}
-        <div className="px-4 pb-3 space-y-2" style={{ backgroundColor:"#0F0D2A" }}>
-          {[
-            { label:"Chest pain, shortness of breath", badge:"HIGH RISK", bc:"#EF4444" },
-            { label:"Medication interaction check",    badge:"MEDIUM",    bc:"#F59E0B" },
-            { label:"Post-op follow-up review",        badge:"ROUTINE",   bc:"#34D399" },
-          ].map((r,i) => (
-            <div key={i} className="flex items-center justify-between rounded-xl p-3" style={{ backgroundColor:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
-              <p className="text-[11px]" style={{ color:"#CBD5E1" }}>{r.label}</p>
-              <span className="text-[9px] px-2 py-0.5 rounded-full font-bold ml-2 shrink-0" style={{ backgroundColor:`${r.bc}20`, color:r.bc }}>{r.badge}</span>
+
+        {/* Animated review rows */}
+        <div className="px-5 pb-4 space-y-2.5" style={{ backgroundColor:"rgba(10,9,28,0.8)" }}>
+          {mockRows.map((r, i) => (
+            <div key={i}
+              className="flex items-center justify-between rounded-xl px-4 py-3 transition-all duration-500"
+              style={{
+                backgroundColor:"rgba(255,255,255,0.03)",
+                border:"1px solid rgba(255,255,255,0.07)",
+                opacity: visibleRows.includes(i) ? 1 : 0,
+                transform: visibleRows.includes(i) ? "translateY(0)" : "translateY(8px)",
+              }}>
+              <p className="text-[12px]" style={{ color:"#CBD5E1" }}>{r.label}</p>
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold ml-3 shrink-0"
+                style={{ backgroundColor:`${r.bc}20`, color:r.bc }}>
+                {r.badge}
+              </span>
             </div>
           ))}
         </div>
-        {/* Live badge */}
-        <div className="mx-4 mb-4 rounded-xl p-3 flex items-center gap-2.5" style={{ backgroundColor:"rgba(16,185,129,0.08)", border:"1px solid rgba(16,185,129,0.25)" }}>
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shrink-0" />
+
+        {/* Live analysis bar — pulses */}
+        <div className="mx-5 mb-5 rounded-xl px-4 py-3 flex items-center gap-3"
+          style={{ backgroundColor:"rgba(16,185,129,0.08)", border:"1px solid rgba(16,185,129,0.3)" }}>
+          <span className="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse shrink-0" />
           <div>
-            <p className="text-[10px] font-bold" style={{ color:"#34D399" }}>LIVE ANALYSIS</p>
-            <p className="text-[10px]" style={{ color:"#64748B" }}>AI triage session active</p>
+            <p className="text-[11px] font-bold" style={{ color:"#34D399" }}>LIVE ANALYSIS</p>
+            <p className="text-[11px]" style={{ color:"#64748B" }}>AI triage session active</p>
           </div>
         </div>
       </div>
-      {/* Glow */}
-      <div className="absolute -inset-6 -z-10 rounded-3xl opacity-20 blur-3xl pointer-events-none"
-        style={{ background:"radial-gradient(circle, var(--color-accent-dark), transparent)" }} />
     </div>
   );
 }
@@ -113,19 +164,30 @@ export default function HomePage() {
       <main>
 
         {/* ── Two-column Hero ── */}
-        <section className="py-16 sm:py-24" style={{ backgroundColor:"var(--color-bg)" }}>
-          <div className="max-w-6xl mx-auto px-5 sm:px-8 grid md:grid-cols-2 gap-14 items-center">
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-5"
+        <section className="relative overflow-hidden">
+          {/* Left half: light lavender; right half: white — creates a visual split behind the two columns */}
+          <div className="absolute inset-0 grid grid-cols-2 pointer-events-none">
+            <div style={{ background:"linear-gradient(160deg, #DDDCFF 0%, #E8E7FF 100%)" }} />
+            <div style={{ backgroundColor:"#F8F8FF" }} />
+          </div>
+          {/* Subtle radial accent top-left */}
+          <div className="absolute top-0 left-0 w-[500px] h-[500px] pointer-events-none opacity-40"
+            style={{ background:"radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%)" }} />
+
+          <div className="relative max-w-6xl mx-auto px-8 sm:px-12 py-20 sm:py-28 grid md:grid-cols-2 gap-16 items-center">
+
+            {/* Left column */}
+            <div className="pl-0 sm:pl-2">
+              <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-extrabold leading-[1.1] tracking-tight mb-6"
                 style={{ fontFamily:"var(--font-heading)", color:"var(--color-ink)" }}>
                 Healthcare triage reviewed by AI,{" "}
                 <span style={{ color:"var(--color-accent-dark)" }}>not guesswork.</span>
               </h1>
-              <p className="text-lg leading-relaxed mb-8" style={{ color:"var(--color-ink-secondary)" }}>
+              <p className="text-lg leading-relaxed mb-9 max-w-md" style={{ color:"var(--color-ink-secondary)" }}>
                 MedReview uses clinical-grade neural networks to analyse symptoms and prioritise care
                 pathways with verifiable on-chain accuracy.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
+              <div className="flex flex-col sm:flex-row gap-3 mb-10">
                 <Link href="/review/symptoms"
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-bold text-base text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   style={{ background:"linear-gradient(135deg, var(--color-accent-dark), #818CF8)", fontFamily:"var(--font-heading)" }}>
@@ -133,22 +195,35 @@ export default function HomePage() {
                 </Link>
                 <Link href="/review/report"
                   className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl font-bold text-base border-2 transition-all hover:scale-105"
-                  style={{ borderColor:"var(--color-accent)", color:"var(--color-accent-dark)", backgroundColor:"var(--color-surface)", fontFamily:"var(--font-heading)" }}>
+                  style={{ borderColor:"var(--color-accent)", color:"var(--color-accent-dark)", backgroundColor:"white", fontFamily:"var(--font-heading)" }}>
                   <FileText className="w-4 h-4" /> Review a Report
                 </Link>
               </div>
-              <div className="flex flex-wrap gap-4 text-xs font-semibold" style={{ color:"var(--color-ink-muted)" }}>
-                {["Private by default","Triage only — not diagnosis","GenLayer verified","No public health data"].map(b => (
-                  <span key={b} className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor:"var(--color-accent-dark)" }} />
-                    {b}
+
+              {/* Trust badges — larger, more visible */}
+              <div className="flex flex-wrap gap-2.5">
+                {[
+                  { t:"Private by default",        icon:Lock },
+                  { t:"Triage only — not diagnosis", icon:ShieldCheck },
+                  { t:"GenLayer verified",          icon:CheckCircle },
+                  { t:"No public health data",      icon:Shield },
+                ].map(({ t, icon: Icon }) => (
+                  <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border"
+                    style={{ backgroundColor:"rgba(255,255,255,0.7)", borderColor:"rgba(79,70,229,0.18)", color:"var(--color-accent-dark)", backdropFilter:"blur(4px)" }}>
+                    <Icon className="w-3 h-3 shrink-0" />
+                    {t}
                   </span>
                 ))}
               </div>
             </div>
-            <div className="flex justify-center md:justify-end">
-              <TriageMockup />
+
+            {/* Right column — mockup, slightly larger, elevated */}
+            <div className="flex justify-center md:justify-end items-center pt-4 md:pt-0">
+              <div className="w-full max-w-[500px]" style={{ filter:"drop-shadow(0 40px 80px rgba(79,70,229,0.25))" }}>
+                <TriageMockup />
+              </div>
             </div>
+
           </div>
         </section>
 

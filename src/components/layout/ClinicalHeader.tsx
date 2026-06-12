@@ -43,14 +43,14 @@ export default function ClinicalHeader() {
             MedReview
           </span>
           <span
-            className="hidden sm:block text-[11px] font-semibold px-2 py-0.5 rounded-full"
+            className="hidden sm:block text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest"
             style={{
-              backgroundColor: "var(--color-accent)",
-              color: "var(--color-accent-deeper)",
-              letterSpacing: "0.04em",
+              backgroundColor: "rgba(79,70,229,0.1)",
+              color: "var(--color-accent-dark)",
+              letterSpacing: "0.08em",
             }}
           >
-            Triage AI
+            AI Triage
           </span>
         </Link>
 
